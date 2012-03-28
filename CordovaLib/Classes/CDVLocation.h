@@ -59,17 +59,20 @@ typedef NSUInteger CDVLocationStatus;
 @interface CDVLocationData : NSObject {
     CDVLocationStatus locationStatus;
     NSMutableArray*  locationCallbacks;
+    NSMutableDictionary*  watchCallbacks;
     CLLocation*      locationInfo;
 }
 
 @property (nonatomic, assign) CDVLocationStatus locationStatus;
 @property (nonatomic, retain) CLLocation* locationInfo;
 @property (nonatomic, retain) NSMutableArray* locationCallbacks;
+@property (nonatomic, retain) NSMutableDictionary* watchCallbacks;
 
 @end
 
 @interface CDVLocation : CDVPlugin <CLLocationManagerDelegate> {
     @private BOOL      __locationStarted;
+    @private BOOL      __highAccuracyEnabled;
     CDVHeadingData*    headingData;
     CDVLocationData*   locationData;
 }
@@ -81,9 +84,11 @@ typedef NSUInteger CDVLocationStatus;
 
 - (BOOL) hasHeadingSupport;
 - (void) getLocation:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+- (void) addWatch:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+- (void) clearWatch:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 - (void) returnLocationInfo: (NSString*) callbackId;
 - (void) returnLocationError: (NSUInteger) errorCode withMessage: (NSString*) message;
-- (void) startLocation;
+- (void) startLocation: (BOOL) enableHighAccuracy;
 - (void) stopLocation;
 
 - (void) locationManager:(CLLocationManager *)manager
